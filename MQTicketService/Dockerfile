@@ -47,4 +47,4 @@ RUN chmod a+x /data/startApp.sh
 #
 # Run MQ and execute TicketGenerator
 USER 1001
-ENTRYPOINT [ "/data/startApp.sh" ]
+CMD [ "/data/startApp.sh" ]

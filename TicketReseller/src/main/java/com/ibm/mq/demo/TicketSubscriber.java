@@ -18,11 +18,7 @@ package com.ibm.mq.demo;
 
 import java.util.logging.*;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
+import javax.jms.*;
 
 
 /**
@@ -54,25 +50,25 @@ public class TicketSubscriber
       System.out.println("Challenge : Subscribes to topic");
       System.out.println("Your code to create a subscription will go here");
 
-      //try {
+      try {
         // Create the Topic and Subscription to it.
         // The following code needs to be added here
         logger.finest("Challenge Add code to : Create a topic");
+        Destination topic = session.createTopic(destinationName);
         logger.finest("Challenge Add code to : Create a Consumer, save in class variable subscriber");
-
+        this.subscriber = session.createConsumer(topic);
+        this.session = session;
         logger.fine("Subscription to ticket queue established");
-      //} catch (JMSException e) {
-      //  logger.severe("Unable to establish subscription to ticket queue");
-      //  e.printStackTrace();
-      //}
+      } catch (JMSException e) {
+        logger.severe("Unable to establish subscription to ticket queue");
+        e.printStackTrace();
+      }
     }
 
     /**
       * Verifies that the subscription was successfully created
       *
-      * @param None
-      *
-      * @return boolean indicating whether the connection was successfull.
+      * @return boolean indicating whether the connection was successful.
       */
     public boolean isGood() {
       return (subscriber != null);
@@ -83,8 +79,6 @@ public class TicketSubscriber
       * Polls the subscription waiting for a message to be published.
       *
       * Challenge : Receives a publication
-      *
-      * @param None
       *
       * @return Message that has been received, once a message has been
       * received.
@@ -97,7 +91,7 @@ public class TicketSubscriber
         System.out.println("Your code to receive a message will go here");
         // The following code needs to be added here
         logger.finest("Challenge Add code to : Receive a message from the MessageConsumer");
-
+        message = subscriber.receive(3000);
         if (message != null)
         {
           System.out.println("************************************");
@@ -109,8 +103,7 @@ public class TicketSubscriber
         concurrentErrorCounter = 0;
 
         // Once you have your message you can delete this line
-        System.out.println("You can remove this thrown exception when you have your message code");
-        throw new PublishWaitException("Temp Exit from an endless loop in shell code");
+
       }
       catch (JMSException e) {
         logger.warning("Error waiting for ticket message to be published");
@@ -125,7 +118,7 @@ public class TicketSubscriber
 }
 
 class PublishWaitException extends Exception {
-  private static final long serialVersionUID = 42l;
+  private static final long serialVersionUID = 42L;
 
   public PublishWaitException() {}
   public PublishWaitException(String error) {

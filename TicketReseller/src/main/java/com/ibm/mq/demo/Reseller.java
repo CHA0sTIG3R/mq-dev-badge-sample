@@ -70,7 +70,7 @@ public class Reseller
               // then requests to purchase a batch of tickets
               // The JMS Code to put a message onto the purchase queue will be
               // in TicketRequester.java
-              String correlationID = ticketRequester.put(message, numToReserve);
+              String correlationID = TicketRequester.put(message, numToReserve);
               if (correlationID != null) {
                 logger.fine("Request has been sent, waiting response from Event Booking System");
                 // Challenge : Our reseller application does a get from this queue
@@ -83,8 +83,7 @@ public class Reseller
                 }
               }
             }
-          }
-          catch(PublishWaitException e) {
+          } catch(PublishWaitException e) {
             logger.warning("Repeated Exceptions thrown while waiting for response");
             e.printStackTrace();
             break; // The while true loop
@@ -100,12 +99,11 @@ public class Reseller
   }
 
   /**
-   * Initilise the logging by switching off default logging and
+   * Initialise the logging by switching off default logging and
    * setting the log level to the desired level. The Default logger
    * is first removed to prevent duplication of INFO and above logs.
    *
-   * @param None
-   * @return None
+   *
    */
   private static void initialiseLogging()
   {
@@ -129,7 +127,7 @@ public class Reseller
    *
    * Challenge : Processes a publication
    *
-   * @param Message the Message that was received by the subcription
+   * @param message the Message that was received by the subcription
    * @return int the quantity of tickets to be requested.
    */
   private static int howMany(Message message) {
